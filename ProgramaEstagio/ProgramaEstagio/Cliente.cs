@@ -9,27 +9,26 @@ namespace ProgramaEstagio
     {
         List<Cliente> clienteLista = new List<Cliente>();
 
-        public Cliente(List<Cliente> _ClienteLista)
+        public Cliente()
         {
-            clienteLista = _ClienteLista;
         }
 
-        public List<Cliente> IncluirCliente(Cliente _novoCliente)
+        public int IncluirCliente(Cliente _novoCliente)
         {
             try
             {
                 clienteLista.Add(_novoCliente);
                 Console.WriteLine("Cliente Inserido com Sucesso..");
-                return clienteLista;
+                return 1;
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.ToString());
-                return clienteLista;
+                return 1;
             }
         }
 
-        public List<Cliente> ExcluirCliente(string _cpfCliente)
+        public int ExcluirCliente(string _cpfCliente)
         {
             try
             {
@@ -46,16 +45,16 @@ namespace ProgramaEstagio
 
                 }
                 Console.WriteLine("Cliente Exluido com Sucesso..");
-                return clienteLista;
+                return 1;
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.ToString());
-                return clienteLista;
+                return 0;
             }
         }
 
-        public List<Cliente> AlteraCliente(string _cpfCliente, Cliente _clienteAlterado)
+        public int AlteraCliente(string _cpfCliente, Cliente _clienteAlterado)
         {
             try
             {
@@ -72,12 +71,12 @@ namespace ProgramaEstagio
 
                 }
                 Console.WriteLine("Cliente Alterado com Sucesso..");
-                return clienteLista;
+                return 1;
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.ToString());
-                return clienteLista;
+                return 0;
             }
         }
 
