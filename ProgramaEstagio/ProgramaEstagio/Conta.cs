@@ -31,14 +31,57 @@ namespace ProgramaEstagio
 
         public void RealizaDeposito(Operacoes _opera)
         {
-            _opera.Deposito(_opera);
+            _opera.InsereOperacao(_opera);
             AtualizaSaldo(_opera);
         }
 
         public void RealizaSaque(Operacoes _opera)
         {
- 
+            if (_opera._Conta.Saldo > _opera.Valor)
+            {
+                _opera.InsereOperacao(_opera);
+                AtualizaSaldo(_opera);
+            }
+            else
+                Console.WriteLine("Saldo insuficiente para transação." + _opera._Conta.Saldo.ToString("c"));
+
+            
         }
+
+        public void RealizaTransferencia(Operacoes _Emissor, Operacoes _Destinatario)
+        {
+            try
+            {
+
+                if (_Emissor._Conta.Saldo > _Emissor.Valor)
+                {
+                    foreach (var emissor in ListaContas)
+                    {
+                        if (emissor == _Emissor._Conta)
+                        {
+                            foreach (var destinatario in ListaContas)
+                            {
+                                if (destinatario == _Destinatario._Conta)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                    Console.WriteLine("Saldo insuficiente para transação." + _Emissor._Conta.Saldo.ToString("c"));
+
+                
+            }
+            catch (Exception err)
+            {
+
+                Console.WriteLine(err.ToString());
+            }
+        }
+
+
 
         private void AtualizaSaldo(Operacoes _opera)
         {
@@ -53,6 +96,7 @@ namespace ProgramaEstagio
                         Conta aux = item;
                         aux.Saldo += _opera.Valor;
                         ListaContas[i] = aux;
+                        Console.WriteLine("Saldo Disponivel: " + _opera._Conta.Saldo.ToString("c"));
                         break;
                     }
                     else
@@ -68,8 +112,9 @@ namespace ProgramaEstagio
                     if (item.Numero == _opera._Conta.Numero)
                     {
                         Conta aux = item;
-                        aux.Saldo -= _opera.Valor;
+                        aux.Saldo += _opera.Valor;
                         ListaContas[i] = aux;
+                        Console.WriteLine("Saldo Disponivel: " + _opera._Conta.Saldo.ToString("c"));
                         break;
                     }
                 }
@@ -80,6 +125,11 @@ namespace ProgramaEstagio
         private int Numero { get; set; }
         public string Nome { get; set; }
         public Cliente _Cliente { get; set; }
-        public double Saldo { get; set; }
+        private double Saldo;
+        public double saldo
+        {
+            get { return Saldo; }
+        }
+        
     }
 }

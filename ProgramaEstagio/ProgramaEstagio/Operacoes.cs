@@ -8,12 +8,12 @@ namespace ProgramaEstagio
     class Operacoes
     {
         List<Operacoes> ListaOperacoes = new List<Operacoes>();
-        
+
         public Operacoes()
         {
         }
 
-        public int Deposito(Operacoes _operacao)
+        public int InsereOperacao(Operacoes _operacao)
         {
             try
             {
@@ -32,39 +32,29 @@ namespace ProgramaEstagio
             }
         }
 
-        public int Saque(Operacoes _operacao)
+        private int Numero { get; set; }
+        private double _Valor;
+        public double Valor
         {
-            try
+            get { return _Valor; }
+            set
             {
-                ///
-            }
-            catch (Exception err)
-            {
-
-                Console.WriteLine(err.ToString());
+                _Valor = value;
+                if (_Valor < 0)
+                {
+                    _tipo = "Debito";
+                }
+                else
+                    _tipo = "Credito";
             }
         }
-
-        private int Numero { get; set; }
-        public double Valor { get; set; }
         public Categoria Categoria { get; set; }
         public Conta _Conta { get; set; }
         private DateTime DataHora { get; set; }
-        private string tipo;
+        private string _tipo;
         public string Tipo
         {
-            get { return tipo; }
-            set
-            {
-                if (Valor < 0)
-                {
-                    tipo = "DEBITO";
-                }
-                else
-                    tipo = "CREDITO";
-            }
-
-
+            get { return _tipo; }
         }
     }
 }

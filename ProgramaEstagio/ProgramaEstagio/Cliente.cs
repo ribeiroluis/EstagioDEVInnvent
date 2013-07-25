@@ -24,7 +24,7 @@ namespace ProgramaEstagio
             catch (Exception err)
             {
                 Console.WriteLine(err.ToString());
-                return 1;
+                return 0;
             }
         }
 
