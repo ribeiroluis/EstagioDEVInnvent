@@ -56,6 +56,22 @@ namespace ProgramaEstagio
             obj_opera3._Conta = obj_Conta1;
             x.RealizaDeposito(obj_opera3);
 
+            /////////////////////////////////////////////////////////////////////////////////////
+            obj_Conta = new Conta();
+            obj_Conta1 = new Conta();
+            obj_Conta = x.Retornaconta("Luis");
+            obj_Conta1 = x.Retornaconta("Alice");
+            Operacoes emissor = new Operacoes();
+            Operacoes destinatario = new Operacoes();
+            emissor._Conta = obj_Conta;
+            destinatario._Conta = obj_Conta1;
+            emissor.Valor = -100;
+            destinatario.Valor = emissor.Valor * -1;
+            x.RealizaTransferencia(emissor, destinatario);
+
+            x.ExibirTodosLancamentosBancarios();
+            
+
 
             Console.ReadKey();
 
@@ -298,7 +314,7 @@ namespace ProgramaEstagio
 
 
             }
-            public void RealizaTransferencia(Operacoes _Emissor, Operacoes _Destinatario, Operacoes _opera)
+            public void RealizaTransferencia(Operacoes _Emissor, Operacoes _Destinatario)
             {
                 try
                 {
@@ -344,7 +360,7 @@ namespace ProgramaEstagio
             {
                 foreach (var item in ListaContas)
                 {
-                    if (nome.Equals(item.Nome))
+                    if (nome.Equals(item._Cliente.Nome))
                         return item;
                 }
                 return null;
@@ -387,6 +403,7 @@ namespace ProgramaEstagio
                 }
             }
 
+
             List<Operacoes> ListaOperacoes = new List<Operacoes>();
             public int InsereOperacao(Operacoes _operacao)
             {
@@ -406,6 +423,25 @@ namespace ProgramaEstagio
                     return 0;
                 }
             }
+
+            public void ExibirTodosLancamentosBancarios()
+            {
+                IEnumerable<Operacoes> Lista = from op in ListaOperacoes orderby op.DataHora select op;
+
+                Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor");
+                Console.WriteLine("----------------------------------------------------");
+                
+                foreach (var item in Lista)
+                {
+                    string data = item.DataHora.ToShortDateString() + " |";
+                    string cliente = item._Conta._Cliente.Nome + "\t|";
+                    string tipo = item.Tipo + " \t|";
+                    string valor = item.Valor.ToString("C");
+
+                    Console.WriteLine(data + cliente + tipo + valor);
+                }
+            }
+
 
             
         }
