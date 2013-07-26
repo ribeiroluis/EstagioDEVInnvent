@@ -10,11 +10,11 @@ namespace ProgramaEstagio
         static void Main(string[] args)
         {
             Console.Title = "Estágio Innvent!";
-            //Operacoes_Bancarias x = new Operacoes_Bancarias();
+            
             Interface tela = new Interface();
             tela.MenuPrincipal();          
             
-            
+            //Operacoes_Bancarias x = new Operacoes_Bancarias();
             /*/////////////////////////////////////////////////////////////////////////////////
             Cliente obj_cliente = new Cliente();
             Conta obj_Conta = new Conta();
@@ -387,17 +387,15 @@ namespace ProgramaEstagio
             {
                 try
                 {
-                    int indiceEmissor = 0;
-                    int indiceDestinatario = 0;
                     if (_Emissor._Conta.Saldo > _Emissor.Valor)
                     {
                         foreach (var emissor in ListaContas)
                         {
-                            if (emissor == _Emissor._Conta)
+                            if (emissor.Nome == _Emissor._Conta.Nome)
                             {
                                 foreach (var destinatario in ListaContas)
                                 {
-                                    if (destinatario == _Destinatario._Conta)
+                                    if (destinatario.Nome == _Destinatario._Conta.Nome)
                                     {
                                         InsereOperacao(_Emissor);
                                         InsereOperacao(_Destinatario);
@@ -405,13 +403,11 @@ namespace ProgramaEstagio
                                         AtualizaSaldo(_Destinatario);
                                         break;
                                     }
-                                    else
-                                        indiceDestinatario++;
+                                    
                                 }
                                 break;
                             }
-                            else
-                                indiceEmissor++;
+                            
                         }
                     }
                     else
@@ -425,11 +421,11 @@ namespace ProgramaEstagio
                     Console.WriteLine(err.ToString());
                 }
             }
-            public Conta Retornaconta(string nome)
+            public Conta Retornaconta(string nome, string conta)
             {
                 foreach (var item in ListaContas)
                 {
-                    if (nome.Equals(item._Cliente.Nome))
+                    if (nome.Equals(item._Cliente.Nome) && conta.Equals(item.Nome))
                         return item;
                 }
                 return null;
@@ -600,6 +596,95 @@ namespace ProgramaEstagio
         {
             Operacoes_Bancarias x = new Operacoes_Bancarias();
             ConsoleKeyInfo opcao;
+
+            public Interface()
+            {
+                Cliente obj_cliente = new Cliente();
+                Conta obj_Conta = new Conta();
+                Operacoes obj_Opera = new Operacoes();
+
+
+                Categoria obj_categoria = new Categoria();
+                SubCategoria subcategoria = new SubCategoria();
+                obj_categoria.CategoriaNome = "DEPOSITO";
+                subcategoria.SubCategoriaNome = "DINHEIRO";
+                obj_categoria._SubCategoria = subcategoria;
+                x.InsereCategoria(obj_categoria);
+
+                obj_categoria = new Categoria();
+                subcategoria = new SubCategoria();
+                obj_categoria.CategoriaNome = "ALUGUEL";
+                subcategoria.SubCategoriaNome = "DINHEIRO";
+                obj_categoria._SubCategoria = subcategoria;
+                x.InsereCategoria(obj_categoria);
+
+                obj_categoria = new Categoria();
+                subcategoria = new SubCategoria();
+                obj_categoria.CategoriaNome = "TRANSFERENCIA";
+                subcategoria.SubCategoriaNome = "DINHEIRO";
+                obj_categoria._SubCategoria = subcategoria;
+                x.InsereCategoria(obj_categoria);
+
+                obj_cliente.Nome = "LUIS";
+                obj_cliente.CPF = "06336799689";
+                x.IncluirCliente(obj_cliente);
+
+                obj_Conta.Nome = "CONTA CORRENTE";
+                obj_Conta._Cliente = obj_cliente;
+                x.InsereConta(obj_Conta);
+
+                obj_Opera.Valor = 100.00;
+                obj_Opera._Conta = obj_Conta;
+                obj_Opera._Categoria = x.RetornaCategoria(1);
+                x.RealizaDeposito(obj_Opera);
+
+                Operacoes obj_Opera1 = new Operacoes();
+                obj_Opera1.Valor = -83.42;
+                obj_Opera1._Conta = obj_Conta;
+                obj_Opera1._Categoria = x.RetornaCategoria(2);
+                x.RealizaSaque(obj_Opera1);
+
+
+                Operacoes obj_Opera2 = new Operacoes();
+                obj_Opera2.Valor = 500.00;
+                obj_Opera2._Conta = obj_Conta;
+                obj_Opera2._Categoria = x.RetornaCategoria(1);
+                x.RealizaDeposito(obj_Opera2);
+
+                ///////////////////////////////////////////////////////////////////////////////////
+
+                Cliente obj_cliente1 = new Cliente();
+                obj_cliente1.Nome = "ALICE";
+                obj_cliente1.CPF = "07038656686";
+                x.IncluirCliente(obj_cliente1);
+
+                Conta obj_Conta1 = new Conta();
+                obj_Conta1.Nome = "POUPANCA";
+                obj_Conta1._Cliente = obj_cliente1;
+                x.InsereConta(obj_Conta1);
+
+                Operacoes obj_opera3 = new Operacoes();
+                obj_opera3.Valor = 300;
+                obj_opera3._Conta = obj_Conta1;
+                obj_opera3._Categoria = x.RetornaCategoria(1);
+                x.RealizaDeposito(obj_opera3);
+
+                /////////////////////////////////////////////////////////////////////////////////////
+                obj_Conta = new Conta();
+                obj_Conta1 = new Conta();
+                obj_Conta = x.Retornaconta("LUIS", "CONTA CORRENTE");
+                obj_Conta1 = x.Retornaconta("ALICE", "POUPANCA");
+                Operacoes emissor = new Operacoes();
+                Operacoes destinatario = new Operacoes();
+                emissor._Conta = obj_Conta;
+                destinatario._Conta = obj_Conta1;
+                emissor.Valor = -100;
+                emissor._Categoria = x.RetornaCategoria(3);
+                destinatario._Categoria = emissor._Categoria;
+                destinatario.Valor = emissor.Valor * -1;
+                x.RealizaTransferencia(emissor, destinatario);
+            }
+            
             
             public void MenuPrincipal()
             {
@@ -611,7 +696,7 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\t1 - Menu Administrador - Cliente");
                     Console.WriteLine("\t\t2 - Menu Administrador - Conta");
                     Console.WriteLine("\t\t3 - Menu Administrador - Transações");
-                    Console.WriteLine("\t\t3 - Menu Administrador - Relatorios");
+                    Console.WriteLine("\t\t4 - Menu Administrador - Relatorios");
                     Console.WriteLine("\t\tESC - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
@@ -619,6 +704,7 @@ namespace ProgramaEstagio
                         case '1': MenuCliente(); break;
                         case '2': MenuConta(); break;
                         case '3': MenuTransacoes(); break;
+                        case '4': MenuRelatorios(); break;
                         default:
                             break;
                     }
@@ -637,24 +723,26 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\t1 - Exibe Relatorio Geral");
                     Console.WriteLine("\t\t2 - Exibe Relatorio por Cliente");
                     Console.WriteLine("\t\t3 - Exibe Relatorio por Categoria ");
-                    Console.WriteLine("\t\t3 - Exibe Relatorio por período");
-                    Console.WriteLine("\t\t4 - Exibe Relatorio por Receita");
-                    Console.WriteLine("\t\t5 - Exibe Relatorio por Despesa");
-                    Console.WriteLine("\t\tF3 - Sair");
+                    Console.WriteLine("\t\t4 - Exibe Relatorio por período");
+                    Console.WriteLine("\t\t5 - Exibe Relatorio por Receita");
+                    Console.WriteLine("\t\t6 - Exibe Relatorio por Despesa");
+                    Console.WriteLine("\t\t7 - Exibe Saldo Cliente");
+                    Console.WriteLine("\t\tF4 - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
-                        case '1': ExibeRelatorioGeral; break;
-                        case '2': RealizaDeposito(); break;
-                        case '3': RealizaDeposito(); break;
-                        case '4': RealizaDeposito(); break;
-                        case '5': RealizaDeposito(); break;
-                        case '6': RealizaDeposito(); break;
+                        case '1': ExibeRelatorioGeral(); break;
+                        case '2': ExibeRelatorioPorCliente(); break;
+                        case '3': ExibeRelatorioPorCategoria(); break;
+                        case '4': ExibeRelatorioPorPeriodo(); break;
+                        case '5': ExibeRelatorioPorReceita(); break;
+                        case '6': ExibeRelatorioPorDespesa(); break;
+                        case '7': ExibeSaldoCliente(); break;
 
                         default:
                             break;
                     }
-                } while (opcao.Key != ConsoleKey.F3);
+                } while (opcao.Key != ConsoleKey.F4);
             }
 
             public void ExibeRelatorioGeral()
@@ -673,7 +761,7 @@ namespace ProgramaEstagio
                 Console.WriteLine("\t\t----------------------------------\n\n");
                 Cliente cli = new Cliente();
                 Console.Write("\t\tCPF Titular: ");
-                cli = x.RetornaCliente(Console.ReadLine());
+                cli = x.RetornaCliente(Console.ReadLine().ToUpper());
                 x.ExibirTodosLancamentosBancarios(cli);
                 Console.ReadLine();
             }
@@ -717,6 +805,38 @@ namespace ProgramaEstagio
                 Console.ReadLine();
             }
 
+            public void ExibeSaldoCliente()
+            {
+                Conta cont = new Conta();
+                Cliente cli = new Cliente();
+
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                Console.Write("\t\tNome Titular: ");
+                cli.Nome = Console.ReadLine().ToUpper();
+                Console.Write("\t\tNome da conta: ");
+                cont.Nome = Console.ReadLine().ToUpper();
+                cont._Cliente = cli;
+                cont = x.Retornaconta(cli.Nome, cont.Nome);
+                if (cont != null)
+                {
+                    string data = DateTime.Now.ToShortDateString() + " |";
+                    string nome = cont._Cliente.Nome + "\t|";
+                    string saldo = cont.Saldo.ToString("c");
+                    Console.Clear();
+                    Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                    Console.WriteLine("\t\t----------------------------------\n\n");
+                    Console.WriteLine("Data       |Cliente\t|Saldo");
+                    Console.WriteLine("----------------------------------------");
+                    Console.WriteLine(data + nome + saldo);                   
+                }
+                else
+                    Console.WriteLine("Não há cliente ou conta cadastrada!");
+                
+                Console.ReadLine();
+            }
+
 
             #endregion
 
@@ -732,7 +852,7 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\t1 - Realiza Deposito");
                     Console.WriteLine("\t\t2 - Realiza Saque");
                     Console.WriteLine("\t\t3 - Realiza Transferencia");
-                    Console.WriteLine("\t\tF3 - Sair");
+                    Console.WriteLine("\t\tF4 - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
@@ -742,7 +862,7 @@ namespace ProgramaEstagio
                         default:
                             break;
                     }
-                } while (opcao.Key != ConsoleKey.F3);
+                } while (opcao.Key != ConsoleKey.F4);
             }
 
             public void RealizaDeposito()
@@ -751,12 +871,17 @@ namespace ProgramaEstagio
                 Conta cont = new Conta();
                 Categoria cat = new Categoria();
                 SubCategoria subcat = new SubCategoria();
+                Cliente cli = new Cliente();
 
                 Console.Clear();
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
                 Console.WriteLine("\t\t----------------------------------\n\n");
                 Console.Write("\t\tNome Titular: ");
-                cont = x.Retornaconta(Console.ReadLine().ToUpper());
+                cli.Nome = Console.ReadLine().ToUpper();
+                Console.Write("\t\tNome da conta: ");
+                cont.Nome = Console.ReadLine().ToUpper();
+                cont._Cliente = cli;
+                cont = x.Retornaconta(cont.Nome, cont._Cliente.Nome);
                 if (cont != null)
                 {
                     op._Conta = cont;
@@ -782,12 +907,17 @@ namespace ProgramaEstagio
                 Conta cont = new Conta();
                 Categoria cat = new Categoria();
                 SubCategoria subcat = new SubCategoria();
+                Cliente cli = new Cliente();
 
                 Console.Clear();
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
                 Console.WriteLine("\t\t----------------------------------\n\n");
                 Console.Write("\t\tNome Titular: ");
-                cont = x.Retornaconta(Console.ReadLine().ToUpper());
+                cli.Nome = Console.ReadLine().ToUpper();
+                Console.Write("\t\tNome da conta: ");
+                cont.Nome = Console.ReadLine().ToUpper();
+                cont._Cliente = cli;
+                cont = x.Retornaconta(cont.Nome, cont._Cliente.Nome);
                 if (cont != null)
                 {
                     op._Conta = cont;
@@ -818,14 +948,24 @@ namespace ProgramaEstagio
                 Categoria cat = new Categoria();
                 SubCategoria subcat = new SubCategoria();
 
+                Cliente cli = new Cliente();
+                Cliente cli1 = new Cliente();
+
                 Console.Clear();
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
                 Console.WriteLine("\t\t----------------------------------\n\n");
                 
                 Console.Write("\t\tNome Titular Emissor: ");
-                cont = x.Retornaconta(Console.ReadLine().ToUpper());
+                cli.Nome = Console.ReadLine().ToUpper();
+                Console.Write("\t\tNome da conta emitente: ");
+                cont.Nome = Console.ReadLine().ToUpper();
+                cont = x.Retornaconta(cli.Nome, cont.Nome);
+
                 Console.Write("\t\tNome Titular Destinatario: ");
-                cont1 = x.Retornaconta(Console.ReadLine().ToUpper());
+                cli1.Nome = Console.ReadLine().ToUpper();
+                Console.Write("\t\tNome da conta destino: ");
+                cont1.Nome = Console.ReadLine().ToUpper();
+                cont1 = x.Retornaconta(cli1.Nome, cont1.Nome);
                 
                 if (cont != null && cont1!=null)
                 {
@@ -868,7 +1008,7 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
                     Console.WriteLine("\t\t-----------------------------------");
                     Console.WriteLine("\t\t1 - Incluir conta");
-                    Console.WriteLine("\t\tF1 - Sair");
+                    Console.WriteLine("\t\tF4 - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
@@ -876,7 +1016,7 @@ namespace ProgramaEstagio
                         default:
                             break;
                     }
-                } while (opcao.Key != ConsoleKey.F1);
+                } while (opcao.Key != ConsoleKey.F4);
             }
 
             public void IncluirConta()
@@ -918,7 +1058,7 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\t1 - Adicionar Cliente");
                     Console.WriteLine("\t\t2 - Alterar Cliente");
                     Console.WriteLine("\t\t3 - Excluir Cliente");                    
-                    Console.WriteLine("\t\tF2 - Sair");
+                    Console.WriteLine("\t\tF4 - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
@@ -928,7 +1068,7 @@ namespace ProgramaEstagio
                         default:
                             break;
                     }
-                } while (opcao.Key != ConsoleKey.F2);                
+                } while (opcao.Key != ConsoleKey.F4);                
             }
 
             public void InserirCliente()
