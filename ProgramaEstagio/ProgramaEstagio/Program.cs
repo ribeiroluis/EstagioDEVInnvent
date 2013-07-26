@@ -12,8 +12,7 @@ namespace ProgramaEstagio
             Console.Title = "Estágio Innvent!";
             //Operacoes_Bancarias x = new Operacoes_Bancarias();
             Interface tela = new Interface();
-            tela.MenuPrincipal();
-            
+            tela.MenuPrincipal();          
             
             
             /*/////////////////////////////////////////////////////////////////////////////////
@@ -529,9 +528,9 @@ namespace ProgramaEstagio
                     Console.WriteLine(data + cliente + tipo + valor + _categoria);
                 }
             }
-            public void ExibirTodosLancamentosBancarios(int idCategoria)
+            public void ExibirTodosLancamentosBancarios(string Categoria)
             {
-                IEnumerable<Operacoes> Lista = from op in ListaOperacoes where op._Categoria.IdCategoria == idCategoria select op;
+                IEnumerable<Operacoes> Lista = from op in ListaOperacoes where op._Categoria.CategoriaNome == Categoria select op;
 
                 Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor\t        |Categoria");
                 Console.WriteLine("-------------------------------------------------------------------");
@@ -612,11 +611,14 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\t1 - Menu Administrador - Cliente");
                     Console.WriteLine("\t\t2 - Menu Administrador - Conta");
                     Console.WriteLine("\t\t3 - Menu Administrador - Transações");
+                    Console.WriteLine("\t\t3 - Menu Administrador - Relatorios");
                     Console.WriteLine("\t\tESC - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
                         case '1': MenuCliente(); break;
+                        case '2': MenuConta(); break;
+                        case '3': MenuTransacoes(); break;
                         default:
                             break;
                     }
@@ -624,12 +626,238 @@ namespace ProgramaEstagio
             }
 
 
+            #region Relatorios
+            public void MenuRelatorios()
+            {
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                    Console.WriteLine("\t\t-----------------------------------");
+                    Console.WriteLine("\t\t1 - Exibe Relatorio Geral");
+                    Console.WriteLine("\t\t2 - Exibe Relatorio por Cliente");
+                    Console.WriteLine("\t\t3 - Exibe Relatorio por Categoria ");
+                    Console.WriteLine("\t\t3 - Exibe Relatorio por período");
+                    Console.WriteLine("\t\t4 - Exibe Relatorio por Receita");
+                    Console.WriteLine("\t\t5 - Exibe Relatorio por Despesa");
+                    Console.WriteLine("\t\tF3 - Sair");
+                    opcao = Console.ReadKey();
+                    switch (opcao.KeyChar)
+                    {
+                        case '1': ExibeRelatorioGeral; break;
+                        case '2': RealizaDeposito(); break;
+                        case '3': RealizaDeposito(); break;
+                        case '4': RealizaDeposito(); break;
+                        case '5': RealizaDeposito(); break;
+                        case '6': RealizaDeposito(); break;
 
-            #region Transacoes
+                        default:
+                            break;
+                    }
+                } while (opcao.Key != ConsoleKey.F3);
+            }
+
+            public void ExibeRelatorioGeral()
+            {
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                x.ExibirTodosLancamentosBancarios();
+                Console.ReadLine();
+            }
+
+            public void ExibeRelatorioPorCliente()
+            {
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                Cliente cli = new Cliente();
+                Console.Write("\t\tCPF Titular: ");
+                cli = x.RetornaCliente(Console.ReadLine());
+                x.ExibirTodosLancamentosBancarios(cli);
+                Console.ReadLine();
+            }
+
+            public void ExibeRelatorioPorCategoria()
+            {
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                Console.Write("\t\tCategoria: ");
+                string cat = Console.ReadLine();
+                x.ExibirTodosLancamentosBancarios(cat);
+                Console.ReadLine();
+            }
+            public void ExibeRelatorioPorPeriodo()
+            {
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                Console.Write("\t\tInicio (dd/mm/aa): ");
+                string inicio = Console.ReadLine();
+                Console.Write("\t\\tFim (dd/mm/aa): ");
+                string fim = Console.ReadLine();
+                x.ExibirTodosLancamentosBancarios(DateTime.Parse(inicio), DateTime.Parse(fim));
+                Console.ReadLine();
+            }
+            public void ExibeRelatorioPorReceita()
+            {
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                x.ExibirTodosLancamentosBancarios(true);
+                Console.ReadLine();
+            }
+            public void ExibeRelatorioPorDespesa()
+            {
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                x.ExibirTodosLancamentosBancarios(false);
+                Console.ReadLine();
+            }
 
 
             #endregion
 
+
+            #region Transacoes
+            public void MenuTransacoes()
+            {
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                    Console.WriteLine("\t\t-----------------------------------");
+                    Console.WriteLine("\t\t1 - Realiza Deposito");
+                    Console.WriteLine("\t\t2 - Realiza Saque");
+                    Console.WriteLine("\t\t3 - Realiza Transferencia");
+                    Console.WriteLine("\t\tF3 - Sair");
+                    opcao = Console.ReadKey();
+                    switch (opcao.KeyChar)
+                    {
+                        case '1': RealizaDeposito(); break;
+                        case '2': RealizaSaque(); break;
+                        case '3': RealizaTransferencia(); break;
+                        default:
+                            break;
+                    }
+                } while (opcao.Key != ConsoleKey.F3);
+            }
+
+            public void RealizaDeposito()
+            {
+                Operacoes op = new Operacoes();
+                Conta cont = new Conta();
+                Categoria cat = new Categoria();
+                SubCategoria subcat = new SubCategoria();
+
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                Console.Write("\t\tNome Titular: ");
+                cont = x.Retornaconta(Console.ReadLine().ToUpper());
+                if (cont != null)
+                {
+                    op._Conta = cont;
+                    Console.Write("\t\tNome da Categoria: ");
+                    cat.CategoriaNome = Console.ReadLine().ToUpper();
+                    Console.Write("\t\tNome da SubCategoria: ");
+                    subcat.SubCategoriaNome = Console.ReadLine().ToUpper();
+                    Console.Write("\t\tValor da Operaçao: ");
+                    op.Valor = double.Parse(Console.ReadLine());
+                    op._Categoria = cat;
+                    op._Categoria._SubCategoria = subcat;
+                    x.RealizaDeposito(op);
+                }
+                else
+                    Console.WriteLine("Não há cliente cadastrado");
+
+                Console.ReadKey();
+            }
+
+            public void RealizaSaque()
+            {
+                Operacoes op = new Operacoes();
+                Conta cont = new Conta();
+                Categoria cat = new Categoria();
+                SubCategoria subcat = new SubCategoria();
+
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                Console.Write("\t\tNome Titular: ");
+                cont = x.Retornaconta(Console.ReadLine().ToUpper());
+                if (cont != null)
+                {
+                    op._Conta = cont;
+                    Console.Write("\t\tNome da Categoria: ");
+                    cat.CategoriaNome = Console.ReadLine().ToUpper();
+                    Console.Write("\t\tNome da SubCategoria: ");
+                    subcat.SubCategoriaNome = Console.ReadLine().ToUpper();
+                    Console.Write("\t\tValor da Operaçao: ");
+                    op.Valor = double.Parse(Console.ReadLine()) * -1;
+                    op._Categoria = cat;
+                    op._Categoria._SubCategoria = subcat;
+                    x.RealizaSaque(op);
+                }
+                else
+                    Console.WriteLine("Não há cliente cadastrado");
+
+                Console.ReadKey();
+            }
+
+            public void RealizaTransferencia()
+            {
+                Operacoes op = new Operacoes();
+                Conta cont = new Conta();
+
+                Operacoes op1 = new Operacoes();
+                Conta cont1 = new Conta();
+
+                Categoria cat = new Categoria();
+                SubCategoria subcat = new SubCategoria();
+
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n");
+                
+                Console.Write("\t\tNome Titular Emissor: ");
+                cont = x.Retornaconta(Console.ReadLine().ToUpper());
+                Console.Write("\t\tNome Titular Destinatario: ");
+                cont1 = x.Retornaconta(Console.ReadLine().ToUpper());
+                
+                if (cont != null && cont1!=null)
+                {
+                    op._Conta = cont;
+                    op1._Conta = cont1;
+
+                    Console.Write("\t\tNome da Categoria: ");
+                    cat.CategoriaNome = Console.ReadLine().ToUpper();                    
+                    Console.Write("\t\tNome da SubCategoria: ");
+                    subcat.SubCategoriaNome = Console.ReadLine().ToUpper();
+                    Console.Write("\t\tValor da Operaçao: ");
+
+                    op._Categoria = cat;
+                    op._Categoria._SubCategoria = subcat;
+
+                    op1._Categoria = cat;
+                    op1._Categoria._SubCategoria = subcat;
+
+                    op.Valor = double.Parse(Console.ReadLine()) * -1;
+                    op1.Valor = op.Valor * -1;
+
+                    x.RealizaTransferencia(op, op1);
+                }
+                else
+                    Console.WriteLine("Não há cliente cadastrado");
+
+                Console.ReadKey();
+            }
+            #endregion
+
+            
+            
             #region Conta
 
             public void MenuConta()
@@ -640,15 +868,15 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
                     Console.WriteLine("\t\t-----------------------------------");
                     Console.WriteLine("\t\t1 - Incluir conta");
-                    Console.WriteLine("\t\tESC - Sair");
+                    Console.WriteLine("\t\tF1 - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
-                        case '1': InserirCliente(); break;
+                        case '1': IncluirConta(); break;
                         default:
                             break;
                     }
-                } while (opcao.Key != ConsoleKey.Escape);
+                } while (opcao.Key != ConsoleKey.F1);
             }
 
             public void IncluirConta()
@@ -657,22 +885,27 @@ namespace ProgramaEstagio
                 
                 Console.Clear();
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
-                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.WriteLine("\t\t----------------------------------\n\n");
                 Console.Write("\t\tCPF: ");
                 cli.CPF = Console.ReadLine();
                 cli = x.RetornaCliente(cli.CPF);
-                Conta cont = new Conta();
-                Console.Write("\t\tNome da Conta: ");
-                cont.Nome = Console.ReadLine().ToUpper();
-                cont._Cliente = cli;
-                x.InsereConta(cont);
-
-
+                if (cli != null)
+                {
+                    Conta cont = new Conta();
+                    Console.Write("\t\tNome da Conta: ");
+                    cont.Nome = Console.ReadLine().ToUpper();
+                    cont._Cliente = cli;
+                    x.InsereConta(cont);
+                }
+                else
+                    Console.WriteLine("Não há cliente cadastrado");
+                Console.ReadKey();
             }
             
-
             #endregion
 
+            
+            
             #region Cliente
 
             public void MenuCliente()
@@ -685,7 +918,7 @@ namespace ProgramaEstagio
                     Console.WriteLine("\t\t1 - Adicionar Cliente");
                     Console.WriteLine("\t\t2 - Alterar Cliente");
                     Console.WriteLine("\t\t3 - Excluir Cliente");                    
-                    Console.WriteLine("\t\tESC - Sair");
+                    Console.WriteLine("\t\tF2 - Sair");
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
@@ -695,7 +928,7 @@ namespace ProgramaEstagio
                         default:
                             break;
                     }
-                } while (opcao.Key != ConsoleKey.Escape);                
+                } while (opcao.Key != ConsoleKey.F2);                
             }
 
             public void InserirCliente()
@@ -703,7 +936,7 @@ namespace ProgramaEstagio
                 Cliente cli = new Cliente();
                 Console.Clear();
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
-                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.WriteLine("\t\t----------------------------------\n\n");
                 Console.Write("\t\tNome: ");
                 cli.Nome = Console.ReadLine().ToUpper();
                 Console.Write("\t\tCPF: ");
@@ -728,7 +961,7 @@ namespace ProgramaEstagio
                 Cliente cli = new Cliente();
                 Console.Clear();
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
-                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.WriteLine("\t\t----------------------------------\n\n");
                 Console.Write("\t\tCPF: ");
                 cli.CPF = Console.ReadLine();                
                 cli = x.RetornaCliente(cli.CPF);
@@ -754,7 +987,7 @@ namespace ProgramaEstagio
                 Cliente cli = new Cliente();
                 Console.Clear();
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
-                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.WriteLine("\t\t----------------------------------\n\n");
                 Console.Write("\t\tCPF: ");
                 cli.CPF = Console.ReadLine();
                 cli = x.RetornaCliente(cli.CPF);
