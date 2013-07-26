@@ -9,14 +9,39 @@ namespace ProgramaEstagio
     {        
         static void Main(string[] args)
         {
-            Operacoes_Bancarias x = new Operacoes_Bancarias();
+            Console.Title = "Estágio Innvent!";
+            //Operacoes_Bancarias x = new Operacoes_Bancarias();
+            Interface tela = new Interface();
+            tela.MenuPrincipal();
             
             
-
-            //////////////////////////////////////////////////////////////////////////////////
+            
+            /*/////////////////////////////////////////////////////////////////////////////////
             Cliente obj_cliente = new Cliente();
             Conta obj_Conta = new Conta();
             Operacoes obj_Opera = new Operacoes();
+
+
+            Categoria obj_categoria = new Categoria();
+            SubCategoria subcategoria = new SubCategoria();
+            obj_categoria.CategoriaNome = "Deposito";
+            subcategoria.SubCategoriaNome = "Dinheiro";
+            obj_categoria._SubCategoria = subcategoria;
+            x.InsereCategoria(obj_categoria);
+
+            obj_categoria = new Categoria();
+            subcategoria = new SubCategoria();
+            obj_categoria.CategoriaNome = "Aluguel";
+            subcategoria.SubCategoriaNome = "Dinheiro";
+            obj_categoria._SubCategoria = subcategoria;
+            x.InsereCategoria(obj_categoria);
+
+            obj_categoria = new Categoria();
+            subcategoria = new SubCategoria();
+            obj_categoria.CategoriaNome = "Transferencia";
+            subcategoria.SubCategoriaNome = "Dinheiro";
+            obj_categoria._SubCategoria = subcategoria;
+            x.InsereCategoria(obj_categoria);
 
             obj_cliente.Nome = "Luis";
             x.IncluirCliente(obj_cliente);
@@ -27,23 +52,27 @@ namespace ProgramaEstagio
             
             obj_Opera.Valor = 100.00;
             obj_Opera._Conta = obj_Conta;
+            obj_Opera._Categoria = x.RetornaCategoria(1);
             x.RealizaDeposito(obj_Opera);
 
             Operacoes obj_Opera1 = new Operacoes();
             obj_Opera1.Valor = -83.42;
             obj_Opera1._Conta = obj_Conta;
+            obj_Opera1._Categoria = x.RetornaCategoria(2);
             x.RealizaSaque(obj_Opera1);
 
 
             Operacoes obj_Opera2 = new Operacoes();
             obj_Opera2.Valor = 500.00;
             obj_Opera2._Conta = obj_Conta;
+            obj_Opera2._Categoria = x.RetornaCategoria(1);
             x.RealizaDeposito(obj_Opera2);
 
             ///////////////////////////////////////////////////////////////////////////////////
 
             Cliente obj_cliente1 = new Cliente();
             obj_cliente1.Nome = "Alice";
+            obj_cliente1.CPF = "06336799689";
             x.IncluirCliente(obj_cliente1);
 
             Conta obj_Conta1 = new Conta();
@@ -54,6 +83,7 @@ namespace ProgramaEstagio
             Operacoes obj_opera3 = new Operacoes();
             obj_opera3.Valor = 300;
             obj_opera3._Conta = obj_Conta1;
+            obj_opera3._Categoria = x.RetornaCategoria(1);
             x.RealizaDeposito(obj_opera3);
 
             /////////////////////////////////////////////////////////////////////////////////////
@@ -66,15 +96,20 @@ namespace ProgramaEstagio
             emissor._Conta = obj_Conta;
             destinatario._Conta = obj_Conta1;
             emissor.Valor = -100;
+            emissor._Categoria = x.RetornaCategoria(3);
+            destinatario._Categoria = emissor._Categoria;
             destinatario.Valor = emissor.Valor * -1;
             x.RealizaTransferencia(emissor, destinatario);
 
+
+            obj_cliente1 = new Cliente();
+            obj_cliente1 = x.RetornaCliente("06336799689");
             x.ExibirTodosLancamentosBancarios();
-            
-
-
-            Console.ReadKey();
-
+            x.ExibirTodosLancamentosBancarios(obj_cliente1);
+            x.ExibirTodosLancamentosBancarios(1);
+            x.ExibirTodosLancamentosBancarios(true);
+            x.ExibirTodosLancamentosBancarios(false);
+             */
         }
 
 
@@ -145,6 +180,23 @@ namespace ProgramaEstagio
                     return 0;
                 }
             }
+            public Cliente RetornaCliente(string cpf)
+            {
+                try
+                {
+                    foreach (var item in clienteLista)
+                    {
+                        if (cpf.Equals(item.CPF))
+                            return item;
+                    }
+                    return null;
+                }
+                catch (Exception err)
+                {
+                    Console.WriteLine(err.ToString());
+                    return null;
+                }
+            }
 
             List<Categoria> ListaCategoria = new List<Categoria>();
             public int InsereCategoria(Categoria _novaCategoria)
@@ -212,8 +264,17 @@ namespace ProgramaEstagio
                     return 0;
                 }
             }
+            public Categoria RetornaCategoria(int idCategoria)
+            {
+                foreach (var item in ListaCategoria)
+                {
+                    if (item.IdCategoria == idCategoria)
+                        return item;
+                }
+                return null;
+            }
 
-            List<SubCategoria> ListaSubCategoria = new List<SubCategoria>();
+            /*List<SubCategoria> ListaSubCategoria = new List<SubCategoria>();
             public int InsereSubCategoria(SubCategoria _novaSubCategoria)
             {
                 try
@@ -279,8 +340,17 @@ namespace ProgramaEstagio
                     return 0;
                 }
             }
-
-
+            public SubCategoria RetornaSubCategoria(int idCategoria)
+            {
+                foreach (var item in ListaSubCategoria)
+                {
+                    if (item.IdCategoria == idCategoria)
+                        return item;
+                }
+                return null;
+            }*/
+            
+            
             List<Conta> ListaContas = new List<Conta>();
             public int InsereConta(Conta _novaconta)
             {
@@ -369,7 +439,7 @@ namespace ProgramaEstagio
             {
                 int i = 0;
 
-                if (_opera.Tipo.Equals("Credito"))
+                if (_opera.Tipo.Equals("Receita"))
                 {
                     foreach (var item in ListaContas)
                     {
@@ -423,30 +493,173 @@ namespace ProgramaEstagio
                     return 0;
                 }
             }
-
             public void ExibirTodosLancamentosBancarios()
             {
                 IEnumerable<Operacoes> Lista = from op in ListaOperacoes orderby op.DataHora select op;
 
-                Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor");
-                Console.WriteLine("----------------------------------------------------");
+                Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor\t        |Categoria");
+                Console.WriteLine("-------------------------------------------------------------------");
                 
                 foreach (var item in Lista)
                 {
                     string data = item.DataHora.ToShortDateString() + " |";
                     string cliente = item._Conta._Cliente.Nome + "\t|";
                     string tipo = item.Tipo + " \t|";
-                    string valor = item.Valor.ToString("C");
+                    string valor = item.Valor.ToString("C") + "\t|";
+                    string _categoria = item._Categoria.CategoriaNome;
 
-                    Console.WriteLine(data + cliente + tipo + valor);
+                    Console.WriteLine(data + cliente + tipo + valor + _categoria);
                 }
             }
+            public void ExibirTodosLancamentosBancarios(Cliente _cliente)
+            {
+                IEnumerable<Operacoes> Lista = from op in ListaOperacoes where op._Conta._Cliente == _cliente select op;
+
+                Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor\t        |Categoria");
+                Console.WriteLine("-------------------------------------------------------------------");
+
+                foreach (var item in Lista)
+                {
+                    string data = item.DataHora.ToShortDateString() + " |";
+                    string cliente = item._Conta._Cliente.Nome + "\t|";
+                    string tipo = item.Tipo + " \t|";
+                    string valor = item.Valor.ToString("C") + "\t|";
+                    string _categoria = item._Categoria.CategoriaNome;
+
+                    Console.WriteLine(data + cliente + tipo + valor + _categoria);
+                }
+            }
+            public void ExibirTodosLancamentosBancarios(int idCategoria)
+            {
+                IEnumerable<Operacoes> Lista = from op in ListaOperacoes where op._Categoria.IdCategoria == idCategoria select op;
+
+                Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor\t        |Categoria");
+                Console.WriteLine("-------------------------------------------------------------------");
+
+                foreach (var item in Lista)
+                {
+                    string data = item.DataHora.ToShortDateString() + " |";
+                    string cliente = item._Conta._Cliente.Nome + "\t|";
+                    string tipo = item.Tipo + " \t|";
+                    string valor = item.Valor.ToString("C") + "\t|";
+                    string _categoria = item._Categoria.CategoriaNome;
+
+                    Console.WriteLine(data + cliente + tipo + valor + _categoria);
+                }
+            }
+            public void ExibirTodosLancamentosBancarios(DateTime inicio, DateTime fim)
+            {
+                IEnumerable<Operacoes> Lista = from op in ListaOperacoes where op.DataHora >= inicio && op.DataHora <= fim select op;
+
+                Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor\t        |Categoria");
+                Console.WriteLine("-------------------------------------------------------------------");
+
+                foreach (var item in Lista)
+                {
+                    string data = item.DataHora.ToShortDateString() + " |";
+                    string cliente = item._Conta._Cliente.Nome + "\t|";
+                    string tipo = item.Tipo + " \t|";
+                    string valor = item.Valor.ToString("C") + "\t|";
+                    string _categoria = item._Categoria.CategoriaNome;
+
+                    Console.WriteLine(data + cliente + tipo + valor + _categoria);
+                }
+            }
+            /// <summary>
+            /// Exibirá na tela os lancamentos de despesa ou receita.
+            /// </summary>
+            /// <param name="Tipo">True: Receita; False: Despesa</param>
+            public void ExibirTodosLancamentosBancarios(bool Tipo)
+            {
+                IEnumerable<Operacoes> Lista;
+
+                if (Tipo)
+                {
+                    Lista = from op in ListaOperacoes where op.Tipo  == "Receita" select op;
+                }
+                else
+                    Lista = from op in ListaOperacoes where op.Tipo  == "Despesa" select op;
 
 
-            
+                Console.WriteLine("Data       |Cliente\t|Tipo    \t|Valor\t        |Categoria");
+                Console.WriteLine("-------------------------------------------------------------------");
+
+                foreach (var item in Lista)
+                {
+                    string data = item.DataHora.ToShortDateString() + " |";
+                    string cliente = item._Conta._Cliente.Nome + "\t|";
+                    string tipo = item.Tipo + " \t|";
+                    string valor = item.Valor.ToString("C") + "\t|";
+                    string _categoria = item._Categoria.CategoriaNome;
+
+                    Console.WriteLine(data + cliente + tipo + valor + _categoria);
+                }
+            }
         }
 
+        class Interface
+        {
+            Operacoes_Bancarias x = new Operacoes_Bancarias();
+            ConsoleKeyInfo opcao;
+            
+            public void MenuPrincipal()
+            {
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                    Console.WriteLine("\t\t-----------------------------------");
+                    Console.WriteLine("\t\t1 - Menu Administrador - Cliente");
+                    Console.WriteLine("\t\t2 - Menu Administrador - Conta");
+                    Console.WriteLine("\t\t3 - Menu Administrador - Transações");
+                    Console.WriteLine("\t\tESC - Sair");
+                    opcao = Console.ReadKey();
+                    switch (opcao.KeyChar)
+                    {
+                        case '1': Console.WriteLine("Test" + opcao.KeyChar); break;
+                        default:
+                            break;
+                    }
+                } while (opcao.Key != ConsoleKey.Escape);                
+            }
 
-        
+            public void MenuCliente()
+            {
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                    Console.WriteLine("\t\t-----------------------------------");
+                    Console.WriteLine("\t\t1 - Adicionar Cliente");
+                    Console.WriteLine("\t\t2 - Alterar Cliente");
+                    Console.WriteLine("\t\t3 - Excluir Cliente");                    
+                    Console.WriteLine("\t\tESC - Sair");
+                    opcao = Console.ReadKey();
+                    switch (opcao.KeyChar)
+                    {
+                        case '1': Console.WriteLine("Test" + opcao.KeyChar); break;
+                        default:
+                            break;
+                    }
+                } while (opcao.Key != ConsoleKey.Escape);                
+            }
+
+            public void InserirCliente()
+            {
+                Cliente cli = new Cliente();
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.Write("\t\tNome: ");
+                cli.Nome = Console.ReadLine();
+                Console.Write("\t\tCPF: ");
+                cli.CPF = Console.ReadLine();
+                Console.Write("\t\tData de Nascimento (dd/mm/aaaa): ");
+                cli.DataNascimento = DateTime.Parse(Console.ReadLine());
+ 
+            }
+
+        }
     }
 }
+

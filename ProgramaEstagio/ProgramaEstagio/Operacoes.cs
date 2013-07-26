@@ -25,13 +25,13 @@ namespace ProgramaEstagio
                 _Valor = value;
                 if (_Valor < 0)
                 {
-                    _tipo = "Debito";
+                    _tipo = "Despesa";
                 }
                 else
-                    _tipo = "Credito";
+                    _tipo = "Receita";
             }
         }
-        public Categoria Categoria { get; set; }
+        public Categoria _Categoria { get; set; }
         public Conta _Conta { get; set; }
         public DateTime DataHora { get; set; }
         private string _tipo;

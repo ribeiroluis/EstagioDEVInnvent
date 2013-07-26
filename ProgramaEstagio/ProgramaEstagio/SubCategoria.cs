@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProgramaEstagio
 {
-    class SubCategoria: Categoria
+    class SubCategoria
     {
         
         
@@ -14,6 +14,6 @@ namespace ProgramaEstagio
         }       
 
         public int IdSubCategoria { get; set; }
-        public string  Nome { get; set; }
+        public string  SubCategoriaNome { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace ProgramaEstagio
         {
         }
         public int IdCategoria { get; set; }
-        public string  Nome { get; set; }
+        public string  CategoriaNome { get; set; }
+        public SubCategoria _SubCategoria { get; set; }
     }
 }
