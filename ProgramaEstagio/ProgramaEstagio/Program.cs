@@ -616,12 +616,64 @@ namespace ProgramaEstagio
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
-                        case '1': Console.WriteLine("Test" + opcao.KeyChar); break;
+                        case '1': MenuCliente(); break;
                         default:
                             break;
                     }
                 } while (opcao.Key != ConsoleKey.Escape);                
             }
+
+
+
+            #region Transacoes
+
+
+            #endregion
+
+            #region Conta
+
+            public void MenuConta()
+            {
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                    Console.WriteLine("\t\t-----------------------------------");
+                    Console.WriteLine("\t\t1 - Incluir conta");
+                    Console.WriteLine("\t\tESC - Sair");
+                    opcao = Console.ReadKey();
+                    switch (opcao.KeyChar)
+                    {
+                        case '1': InserirCliente(); break;
+                        default:
+                            break;
+                    }
+                } while (opcao.Key != ConsoleKey.Escape);
+            }
+
+            public void IncluirConta()
+            {
+                Cliente cli = new Cliente();
+                
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.Write("\t\tCPF: ");
+                cli.CPF = Console.ReadLine();
+                cli = x.RetornaCliente(cli.CPF);
+                Conta cont = new Conta();
+                Console.Write("\t\tNome da Conta: ");
+                cont.Nome = Console.ReadLine().ToUpper();
+                cont._Cliente = cli;
+                x.InsereConta(cont);
+
+
+            }
+            
+
+            #endregion
+
+            #region Cliente
 
             public void MenuCliente()
             {
@@ -637,7 +689,9 @@ namespace ProgramaEstagio
                     opcao = Console.ReadKey();
                     switch (opcao.KeyChar)
                     {
-                        case '1': Console.WriteLine("Test" + opcao.KeyChar); break;
+                        case '1': InserirCliente(); break;
+                        case '2': Alterarcliente(); break;
+                        case '3': ExcluirCliente(); break;
                         default:
                             break;
                     }
@@ -651,14 +705,63 @@ namespace ProgramaEstagio
                 Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
                 Console.WriteLine("\t\t----------------------------------\n\n-");
                 Console.Write("\t\tNome: ");
-                cli.Nome = Console.ReadLine();
+                cli.Nome = Console.ReadLine().ToUpper();
                 Console.Write("\t\tCPF: ");
                 cli.CPF = Console.ReadLine();
                 Console.Write("\t\tData de Nascimento (dd/mm/aaaa): ");
                 cli.DataNascimento = DateTime.Parse(Console.ReadLine());
- 
+                Console.Write("\t\tEndereco: ");
+                cli.Logradouro = Console.ReadLine().ToUpper();
+                Console.Write("\t\tNumero: ");
+                cli.Numero = int.Parse(Console.ReadLine());
+                Console.Write("\t\tBairro: ");
+                cli.Bairro = Console.ReadLine().ToUpper();
+                Console.Write("\t\tCidade: ");
+                cli.Cidade = Console.ReadLine().ToUpper();
+                Console.Write("\t\tUF: ");
+                cli.UF = Console.ReadLine().ToUpper();
+                x.IncluirCliente(cli);
             }
 
+            public void Alterarcliente()
+            {
+                Cliente cli = new Cliente();
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.Write("\t\tCPF: ");
+                cli.CPF = Console.ReadLine();                
+                cli = x.RetornaCliente(cli.CPF);
+                Console.Write("\t\tNome: ");
+                cli.Nome = Console.ReadLine().ToUpper();                
+                Console.Write("\t\tData de Nascimento (dd/mm/aaaa): ");
+                cli.DataNascimento = DateTime.Parse(Console.ReadLine());
+                Console.Write("\t\tEndereco: ");
+                cli.Logradouro = Console.ReadLine().ToUpper();
+                Console.Write("\t\tNumero: ");
+                cli.Numero = int.Parse(Console.ReadLine());
+                Console.Write("\t\tBairro: ");
+                cli.Bairro = Console.ReadLine().ToUpper();
+                Console.Write("\t\tCidade: ");
+                cli.Cidade = Console.ReadLine().ToUpper();
+                Console.Write("\t\tUF: ");
+                cli.UF = Console.ReadLine().ToUpper();
+                x.AlteraCliente(cli.CPF, cli);
+            }
+
+            public void ExcluirCliente()
+            {
+                Cliente cli = new Cliente();
+                Console.Clear();
+                Console.WriteLine("\t\tSistema Bancário - Estágio Innvent");
+                Console.WriteLine("\t\t----------------------------------\n\n-");
+                Console.Write("\t\tCPF: ");
+                cli.CPF = Console.ReadLine();
+                cli = x.RetornaCliente(cli.CPF);
+                x.ExcluirCliente(cli.CPF);
+            }
+            
+            #endregion 
         }
     }
 }
